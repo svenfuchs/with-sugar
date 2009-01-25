@@ -1,4 +1,4 @@
-class ActionController::TestCase
+module With
   @@variable_types = {:headers => :to_s, :flash => nil, :session => nil, :flash_cookie => nil}
 
   def it_renders(render_method, *args, &block)
@@ -36,14 +36,18 @@ class ActionController::TestCase
   def it_assigns_example_values(name, value)
     case value
     when :not_nil
-      assert_not_nil assigns(name), "@#{name} is nil"
+      assert_not_nil assigns(name), 
+        "expected @#{name} not to be nil, but it is nil"
     when :undefined
-      assert !@controller.send(:instance_variables).include?("@#{name}"), "@#{name} is defined"
+      assert !@controller.send(:instance_variables).include?("@#{name}"), 
+        "expected @#{name} not to be undefined, but it is defined"
     when Symbol
       if (instance_variable = instance_variable_get("@#{value}")).nil?
-        assert_not_nil assigns(name)
+        assert_not_nil assigns(name), 
+          "expected @#{name} not to be nil, but it is nil"
       else
-        assert_equal instance_variable, assigns(name)
+        assert_equal instance_variable, assigns(name), 
+          "expected @#{instance_variable} to be equal to #{assigns(name).inspect}, but it is not"
       end
     end
   end

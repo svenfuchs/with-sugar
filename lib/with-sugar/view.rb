@@ -20,9 +20,7 @@ module With
       With.view name, options, &block
     end
   end
-end
-
-class ActionController::TestCase
+  
   def it_renders_view(name, options = {}, &block)
     it_renders_template options.delete(:template) || name
     shows name, options, &block
@@ -43,22 +41,22 @@ class ActionController::TestCase
     assert_match pattern, @response.body
   end
   
+  def does_not_have_text(pattern)
+    pattern = /#{pattern}/ unless pattern.is_a?(Regexp)
+    assert @response.body !~ pattern
+  end
+  
   def has_tag(*args, &block)
-    attributes = args.last.is_a?(Hash) ? args.pop : {}
-    name, equality = *args
-    
-    selector = name.to_s + attributes.keys.map { |name| "[#{name}=?]" }.join
-    args = [selector] + attributes.values
-    args << equality if equality
-    
     assert_select *args, &block
   end
   
   def has_form_posting_to(path, &block)
+    path = instance_eval(&path) if path.is_a?(Proc)
     assert_select "form[method=post][action=#{path}]", &block
   end
   
   def has_form_putting_to(path, &block)
+    path = instance_eval(&path) if path.is_a?(Proc)
     assert_select "form[method=post][action=#{path}]" do
       assert_select 'input[name=_method][value=put]'
       instance_eval &block if block

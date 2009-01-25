@@ -20,9 +20,7 @@ module With
       end
     end
   end
-end
-
-class ActionController::TestCase
+  
   protected
   
     def with_page_caching

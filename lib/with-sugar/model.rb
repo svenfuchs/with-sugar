@@ -104,9 +104,7 @@ module With
       end
     end
   end
-end
-
-class ActionController::TestCase
+  
   def it_saves(*names)
     names.each do |name|
       assert !assigns(name).new_record?
