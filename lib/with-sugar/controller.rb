@@ -50,9 +50,9 @@ module With
           "expected @#{instance_variable} to be equal to #{assigns(name).inspect}, but it is not"
       end
     when Proc  
-      assert_equal assigns(name), instance_eval(&value)
+      assert_equal instance_eval(&value), assigns(name)
     else
-      assert_equal assigns(name), value
+      assert_equal value, assigns(name)
     end
   end
 
